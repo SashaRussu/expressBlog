@@ -2,7 +2,14 @@
 <% include head %>
 
 <h1>This is main page</h1>
-<%- message %>
 You can <a href="/logout">logout</a>
+<i><%- message %></i>
+<hr>
+
+<% if (viewType == 'read') { %>
+    <% include read %>
+<% } else { %>
+    <% include write %>
+<% } %>
 
 <% include foot %>

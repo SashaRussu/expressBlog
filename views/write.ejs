@@ -1,0 +1,31 @@
+<% if (viewType == 'write') { %>
+
+    <h2>Write post or go <a href="/?viewType=read">back</a></h2>
+
+    <form method="post" action="/write">
+
+        <label>
+            Category:
+            <select name="categoryid">
+                <% categories.forEach(function(category){ %>
+                    <option value="<%= category.id %>">
+                        <%= category.name %>
+                    </option>
+                <% }); %>
+            </select>
+            <a href="/?viewType=add">add category</a>
+        </label>
+
+        <p>
+            <textarea name="message"></textarea>
+        </p>
+
+        <p>
+            <input type="submit" value="Add">
+
+
+    </form>
+
+<% } else { %>
+    <% include add %>
+<% } %>

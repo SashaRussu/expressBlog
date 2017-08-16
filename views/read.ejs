@@ -1,0 +1,26 @@
+<h2>Select category or <a href="/?viewType=write">write</a> post</h2>
+
+<form method="post" action="/read">
+
+    <label>
+        Category:
+        <select name="categoryid">
+            <option disabled selected></option>
+            <% categories.forEach(function(category){ %>
+            <option value="<%= category.id %>">
+                <%= category.name %>
+            </option>
+            <% }); %>
+        </select>
+        <input type="submit" value="Search">
+    </label>
+
+</form>
+
+<% if (categoryId) { %>
+    <% messages.forEach(function(message) { %>
+        <p style="border: 1px solid black;">
+            <%= message.text %>
+        </p>
+    <% }); %>
+<% } %>

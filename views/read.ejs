@@ -20,8 +20,8 @@
 
 <% if (categoryId) { %>
     <% messages.forEach(function(message) { %>
-        <p style="border: 1px solid black;">
-            <%= message.text %>
-        </p>
+        <div class="message">
+            <%- message.text %>
+        </div>
     <% }); %>
 <% } %>

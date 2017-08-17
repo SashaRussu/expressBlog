@@ -2,6 +2,10 @@
 <html>
 <head>
     <title><%= title %></title>
+
+    <script src="tinymce/tinymce.min.js"></script>
+    <script>tinymce.init({ selector:'textarea' });</script>
+
     <style>
         body {
             padding: 50px;
@@ -12,6 +16,11 @@
         }
         .success {
             color: green;
+        }
+
+        .message {
+            padding: 10px;
+            border: 1px solid black;
         }
     </style>
 </head>

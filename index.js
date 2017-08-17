@@ -4,6 +4,11 @@ const hash = require('pbkdf2-password')();
 const path = require('path');
 const session = require('express-session');
 
+/** База */
+const Users = require('./db/users');
+const Messages = require('./db/messages');
+const Categories = require('./db/categories');
+
 const app = express();
 
 
@@ -32,15 +37,10 @@ app.use(function(req, res, next){
 });
 
 
-/** База */
-//const Users = require('./db/users');
-
-
 /** Автентифікація */
 function authenticate(name, pass, fn) {
   let user = null;
 
-  const Users = require('./db/users');
   Users.findOne({name: name}, function (err, users) {
     if (err) return console.error(err);
 
@@ -60,39 +60,60 @@ function authenticate(name, pass, fn) {
 /** Головна сторінка */
 app.get('/', function(req, res) {
   if (req.session.user) {
-    res.locals.viewType = req.query.viewType;
+    res.locals.viewType = 'read';
+
     res.locals.categoryId = req.query.categoryId;
+    req.session.categoryId = res.locals.categoryId;
 
-    if (req.query.viewType == 'read') {
-      const Categories = require('./db/categories');
-      Categories.find(function (err, categories) {
-        if (err) return console.error(err);
+    Categories.find(function (err, categories) {
+      if (err) return console.error(err);
 
-        if (categories.length) {
+      if (categories.length) {
 
-          if (req.query.categoryId) {
-            const Messages = require('./db/messages');
-            Messages.find({categoryid: req.query.categoryId}, function (err, messages) {
+        if (req.query.categoryId) {
+          Messages
+            .find({categoryid: req.query.categoryId})
+            //.sort({id: -1})
+            .exec(function (err, messages) {
               if (err) return console.error(err);
 
               if (messages.length) {
                 res.render('main', {categories: categories, messages: messages});
               } else {
                 req.session.error = 'Don`t messages in this category';
-                res.redirect('/?viewType=read');
+                res.redirect('/');
               }
             });
-          } else {
-            res.render('main', {categories: categories});
-          }
-
         } else {
-          req.session.error = 'Don`t categories for select';
-          res.redirect('/?viewType=add');
+          res.render('main', {categories: categories});
         }
-      });
-    } else if (req.query.viewType == 'write') {
-      const Categories = require('./db/categories');
+
+      } else {
+        req.session.error = 'Don`t categories for select';
+        res.redirect('/add');
+      }
+    });
+  } else {
+    req.session.error = 'Access denied!';
+    res.redirect('/login');
+  }
+});
+
+
+/** Виведення записів */
+app.post('/read', function(req, res) {
+  res.redirect('/?categoryId=' + req.body.categoryid);
+});
+
+
+/** Додавання запису */
+app.route('/write')
+  .get(function(req, res) {
+    if (req.session.user) {
+      res.locals.viewType = 'write';
+
+      res.locals.categoryId = req.session.categoryId;
+
       Categories.find(function (err, categories) {
         if (err) return console.error(err);
 
@@ -100,17 +121,67 @@ app.get('/', function(req, res) {
           res.render('main', {categories: categories});
         } else {
           req.session.error = 'Don`t categories for select';
-          res.redirect('/?viewType=add');
+          res.redirect('/add');
         }
       });
     } else {
-      res.render('main');
+      req.session.error = 'Access denied!';
+      res.redirect('/login');
     }
-  } else {
-    req.session.error = 'Access denied!';
-    res.redirect('/login');
-  }
-});
+  })
+  .post(function(req, res) {
+    let newMessage = {
+      categoryid: req.body.categoryid,
+      text: req.body.message
+    };
+
+    let message = new Messages(newMessage);
+
+    message.save(function (err, message) {
+      if (message) {
+        req.session.success = 'Added message';
+
+        res.redirect('/?categoryId=' + message.categoryid);
+      } else {
+        req.session.error = 'Please, write message and try again';
+        res.redirect('/write');
+      }
+    });
+  });
+
+
+/** Додавання категорії */
+app.route('/add')
+  .get(function(req, res) {
+    if (req.session.user) {
+      res.locals.viewType = 'add';
+
+      res.locals.categoryId = req.session.categoryId;
+
+      res.render('main');
+    } else {
+      req.session.error = 'Access denied!';
+      res.redirect('/login');
+    }
+  })
+  .post(function(req, res) {
+    let newCategory = {
+      name: req.body.categoryname
+    };
+
+    let category = new Categories(newCategory);
+
+    category.save(function (err, category) {
+      if (category) {
+        req.session.success = 'Added category ' + category.name;
+
+        res.redirect('/?categoryId=' + category.categoryid);
+      } else {
+        req.session.error = 'Please, write category and try again';
+        res.redirect('/add');
+      }
+    });
+  });
 
 
 /** Авторизація */
@@ -125,7 +196,7 @@ app.post('/login', function(req, res) {
 
       req.session.success = 'Hello ' + user.name;
 
-      res.redirect('/?viewType=read');
+      res.redirect('/');
     } else {
       req.session.error = err.message;
       res.redirect('/login');
@@ -150,7 +221,6 @@ app.post('/register', function(req, res) {
     newUser.salt = salt;
     newUser.hash = hash;
 
-    const Users = require('./db/users');
     let user = new Users(newUser);
 
     user.save(function (err, user) {
@@ -159,63 +229,12 @@ app.post('/register', function(req, res) {
 
         req.session.success = 'Hello ' + user.name;
 
-        res.redirect('/?viewType=read');
+        res.redirect('/');
       } else {
         req.session.error = 'This name is already used, please try with another';
         res.redirect('/register');
       }
     });
-  });
-});
-
-
-/** Виведення записів */
-app.post('/read', function(req, res) {
-  res.redirect('/?viewType=read&categoryId=' + req.body.categoryid);
-});
-
-
-/** Додавання запису */
-app.post('/write', function(req, res) {
-  let newMessage = {
-    categoryid: req.body.categoryid,
-    text: req.body.message
-  };
-
-  const Messages = require('./db/messages');
-  let message = new Messages(newMessage);
-
-  message.save(function (err, message) {
-    if (message) {
-      req.session.success = 'Added message';
-
-      res.redirect('/?viewType=read&categoryId=' + message.categoryid);
-    } else {
-      req.session.error = 'Please, write message and try again';
-      res.redirect('/?viewType=write');
-    }
-  });
-});
-
-
-/** Додавання категорії */
-app.post('/add', function(req, res) {
-  let newCategory = {
-    name: req.body.categoryname
-  };
-
-  const Categories = require('./db/categories');
-  let category = new Categories(newCategory);
-
-  category.save(function (err, category) {
-    if (category) {
-      req.session.success = 'Added category ' + category.name;
-
-      res.redirect('/?viewType=write');
-    } else {
-      req.session.error = 'Please, write category and try again';
-      res.redirect('/?viewType=add');
-    }
   });
 });
 

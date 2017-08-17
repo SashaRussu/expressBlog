@@ -1,6 +1,10 @@
 <% if (viewType == 'write') { %>
 
-    <h2>Write post or go <a href="/?viewType=read">back</a></h2>
+    <% if (categoryId) {%>
+        <h2>Write post or go <a href="/?categoryId=<%- categoryId %>">back</a></h2>
+    <% } else { %>
+        <h2>Write post or go <a href="/">back</a></h2>
+    <% } %>
 
     <form method="post" action="/write">
 
@@ -13,7 +17,6 @@
                     </option>
                 <% }); %>
             </select>
-            <a href="/?viewType=add">add category</a>
         </label>
 
         <p>
@@ -22,7 +25,7 @@
 
         <p>
             <input type="submit" value="Add">
-
+        </p>
 
     </form>
 

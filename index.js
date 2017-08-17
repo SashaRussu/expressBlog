@@ -73,7 +73,7 @@ app.get('/', function(req, res) {
         if (req.query.categoryId) {
           Messages
             .find({categoryid: req.query.categoryId})
-            //.sort({id: -1})
+            .sort({data: -1})
             .exec(function (err, messages) {
               if (err) return console.error(err);
 
@@ -132,7 +132,8 @@ app.route('/write')
   .post(function(req, res) {
     let newMessage = {
       categoryid: req.body.categoryid,
-      text: req.body.message
+      text: req.body.message,
+      data: Date.now()
     };
 
     let message = new Messages(newMessage);

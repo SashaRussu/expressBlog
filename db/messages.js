@@ -5,6 +5,10 @@ let messagesSchema = mongoose.Schema({
   text: {
     type: String,
     required: true
+  },
+  data: {
+    type: Date,
+    expires: 60*60*24
   }
 });
 

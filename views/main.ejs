@@ -8,8 +8,12 @@ You can <a href="/logout">logout</a>
 
 <% if (viewType == 'read') { %>
     <% include read %>
-<% } else { %>
+<% } else if (viewType == 'write') { %>
     <% include write %>
+<% } else if (viewType == 'add') { %>
+    <% include add %>
+<% } else { %>
+    <% include delCategory %>
 <% } %>
 
 <% include foot %>

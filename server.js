@@ -10,6 +10,7 @@ const main = require('./route/main');
 const write = require('./route/write');
 const delMessage = require('./route/delMessage');
 const add = require('./route/add');
+const delCategory = require('./route/delCategory');
 
 
 const app = express();
@@ -75,6 +76,12 @@ app.get('/delMessage', delMessage);
 app.route('/add')
   .get(add)
   .post(add);
+
+
+/** Видалення категорії */
+app.route('/delCategory')
+  .get(delCategory)
+  .post(delCategory);
 
 
 /** Вихід */

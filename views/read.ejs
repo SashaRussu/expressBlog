@@ -1,11 +1,11 @@
 <h2>Select category or <a href="/write"><button>write post</button></a>
     <a href="/add"><button>add category</button></a></h2>
 
-<form method="post" action="/read">
+<form id="categories" method="post" action="/read">
 
     <label>
         Category:
-        <select name="categoryid">
+        <select name="categoryid" onchange="document.getElementById('categories').submit()">
             <option disabled selected></option>
             <% categories.forEach(function(category){ %>
             <option value="<%= category.id %>">
@@ -13,7 +13,7 @@
             </option>
             <% }); %>
         </select>
-        <input type="submit" value="Search">
+        <!--<input type="submit" value="Search">-->
     </label>
 
 </form>

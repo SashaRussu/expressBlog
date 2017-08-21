@@ -7,6 +7,8 @@ const session = require('express-session');
 const login = require('./route/login');
 const register = require('./route/register');
 const main = require('./route/main');
+const write = require('./route/write');
+const add = require('./route/add');
 
 
 const app = express();
@@ -49,9 +51,7 @@ app.route('/register')
   .post(register);
 
 
-app.route('/')
-  .get(main)
-  .post(main);
+app.get('/', main);
 
 
 /** Виведення записів */
@@ -62,81 +62,14 @@ app.post('/read', function(req, res) {
 
 /** Додавання запису */
 app.route('/write')
-  .get(function(req, res) {
-    if (req.session.user) {
-      res.locals.viewType = 'write';
-
-      res.locals.categoryId = req.session.categoryId;
-
-      Categories.find(function (err, categories) {
-        if (err) return console.error(err);
-
-        if (categories.length) {
-          res.render('main', {categories: categories});
-        } else {
-          req.session.error = 'Don`t categories for select';
-          res.redirect('/add');
-        }
-      });
-    } else {
-      req.session.error = 'Access denied!';
-      res.redirect('/login');
-    }
-  })
-  .post(function(req, res) {
-    let newMessage = {
-      categoryid: req.body.categoryid,
-      text: req.body.message,
-      data: Date.now()
-    };
-
-    let message = new Messages(newMessage);
-
-    message.save(function (err, message) {
-      if (message) {
-        req.session.success = 'Added message';
-
-        res.redirect('/?categoryId=' + message.categoryid);
-      } else {
-        req.session.error = 'Please, write message and try again';
-        res.redirect('/write');
-      }
-    });
-  });
+  .get(write)
+  .post(write);
 
 
 /** Додавання категорії */
 app.route('/add')
-  .get(function(req, res) {
-    if (req.session.user) {
-      res.locals.viewType = 'add';
-
-      res.locals.categoryId = req.session.categoryId;
-
-      res.render('main');
-    } else {
-      req.session.error = 'Access denied!';
-      res.redirect('/login');
-    }
-  })
-  .post(function(req, res) {
-    let newCategory = {
-      name: req.body.categoryname
-    };
-
-    let category = new Categories(newCategory);
-
-    category.save(function (err, category) {
-      if (category) {
-        req.session.success = 'Added category ' + category.name;
-
-        res.redirect('/?categoryId=' + category.categoryid);
-      } else {
-        req.session.error = 'Please, write category and try again';
-        res.redirect('/add');
-      }
-    });
-  });
+  .get(add)
+  .post(add);
 
 
 /** Вихід */

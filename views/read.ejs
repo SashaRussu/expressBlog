@@ -1,27 +1,39 @@
-<h2>Select category or <a href="/write"><button>write post</button></a>
-    <a href="/add"><button>add category</button></a></h2>
+<div class="block">
+    <h2>Select category</h2>
 
-<form id="categories" method="post" action="/read">
+    <form id="categories" method="post" action="/read">
 
-    <label>
-        Category:
-        <select name="categoryid" onchange="document.getElementById('categories').submit()">
-            <option disabled selected></option>
-            <% categories.forEach(function(category){ %>
-            <option value="<%= category.id %>">
-                <%= category.name %>
-            </option>
-            <% }); %>
-        </select>
-        <!--<input type="submit" value="Search">-->
-    </label>
+        <label>
+            Category:
+            <select name="categoryid" onchange="document.getElementById('categories').submit()">
+                <option disabled selected></option>
+                <% categories.forEach(function(category){ %>
+                <option value="<%= category.id %>">
+                    <%= category.name %>
+                </option>
+                <% }); %>
+            </select>
+            <!--<input type="submit" value="Search">-->
+        </label>
 
-</form>
+    </form>
 
-<% if (categoryId) { %>
-    <% messages.forEach(function(message) { %>
-        <div class="message">
-            <%- message.text %>
-        </div>
-    <% }); %>
-<% } %>
+    <% if (categoryId) { %>
+        <% messages.forEach(function(message) { %>
+            <div class="message">
+                <%- message.text %>
+                <a href="/delMessage/?messageId=<%- message._id %>"><button>delete message</button></a>
+            </div>
+        <% }); %>
+    <% } %>
+</div>
+
+<div class="block">
+    <h2>Functions:</h2>
+    <p>
+        <a href="/write"><button>write post</button></a>
+    </p>
+    <p>
+        <a href="/add"><button>add category</button></a>
+    </p>
+</div>

@@ -8,6 +8,7 @@ const login = require('./route/login');
 const register = require('./route/register');
 const main = require('./route/main');
 const write = require('./route/write');
+const delMessage = require('./route/delMessage');
 const add = require('./route/add');
 
 
@@ -64,6 +65,10 @@ app.post('/read', function(req, res) {
 app.route('/write')
   .get(write)
   .post(write);
+
+
+/** Видалення запису */
+app.get('/delMessage', delMessage);
 
 
 /** Додавання категорії */

@@ -6,11 +6,8 @@ const session = require('express-session');
 
 const login = require('./route/login');
 const register = require('./route/register');
+const main = require('./route/main');
 
-
-/** База */
-const Messages = require('./db/messages');
-const Categories = require('./db/categories');
 
 const app = express();
 
@@ -52,47 +49,9 @@ app.route('/register')
   .post(register);
 
 
-/** Головна сторінка */
-app.get('/', function(req, res) {
-  if (req.session.user) {
-    res.locals.viewType = 'read';
-
-    res.locals.categoryId = req.query.categoryId;
-    req.session.categoryId = res.locals.categoryId;
-
-    Categories.find(function (err, categories) {
-      if (err) return console.error(err);
-
-      if (categories.length) {
-
-        if (req.query.categoryId) {
-          Messages
-            .find({categoryid: req.query.categoryId})
-            .sort({data: -1})
-            .exec(function (err, messages) {
-              if (err) return console.error(err);
-
-              if (messages.length) {
-                res.render('main', {categories: categories, messages: messages});
-              } else {
-                req.session.error = 'Don`t messages in this category';
-                res.redirect('/');
-              }
-            });
-        } else {
-          res.render('main', {categories: categories});
-        }
-
-      } else {
-        req.session.error = 'Don`t categories for select';
-        res.redirect('/add');
-      }
-    });
-  } else {
-    req.session.error = 'Access denied!';
-    res.redirect('/login');
-  }
-});
+app.route('/')
+  .get(main)
+  .post(main);
 
 
 /** Виведення записів */

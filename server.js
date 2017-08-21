@@ -4,8 +4,11 @@ const hash = require('pbkdf2-password')();
 const path = require('path');
 const session = require('express-session');
 
+const login = require('./route/login');
+const register = require('./route/register');
+
+
 /** База */
-const Users = require('./db/users');
 const Messages = require('./db/messages');
 const Categories = require('./db/categories');
 
@@ -39,24 +42,14 @@ app.use(function(req, res, next){
 });
 
 
-/** Автентифікація */
-function authenticate(name, pass, fn) {
-  let user = null;
+app.route('/login')
+  .get(login)
+  .post(login);
 
-  Users.findOne({name: name}, function (err, users) {
-    if (err) return console.error(err);
 
-    user = users;
-
-    if (!user) return fn(new Error('This user is not defined'));
-
-    hash({ password: pass, salt: user.salt }, function (err, pass, salt, hash) {
-      if (err) return fn(err);
-      if (hash == user.hash) return fn(null, user);
-      fn(new Error('Invalid password'));
-    });
-  });
-}
+app.route('/register')
+  .get(register)
+  .post(register);
 
 
 /** Головна сторінка */
@@ -185,61 +178,6 @@ app.route('/add')
       }
     });
   });
-
-
-/** Авторизація */
-app.get('/login', function(req, res) {
-  res.render('login');
-});
-
-app.post('/login', function(req, res) {
-  authenticate(req.body.username, req.body.password, function(err, user){
-    if (user) {
-      req.session.user = user;
-
-      req.session.success = 'Hello ' + user.name;
-
-      res.redirect('/');
-    } else {
-      req.session.error = err.message;
-      res.redirect('/login');
-    }
-  });
-});
-
-
-/** Реєстрація */
-app.get('/register', function(req, res) {
-  res.render('register');
-});
-
-app.post('/register', function(req, res) {
-  let newUser = {
-    name: req.body.username
-  };
-
-  hash({ password: req.body.password }, function (err, pass, salt, hash) {
-    if (err) throw err;
-
-    newUser.salt = salt;
-    newUser.hash = hash;
-
-    let user = new Users(newUser);
-
-    user.save(function (err, user) {
-      if (user) {
-        req.session.user = user;
-
-        req.session.success = 'Hello ' + user.name;
-
-        res.redirect('/');
-      } else {
-        req.session.error = 'This name is already used, please try with another';
-        res.redirect('/register');
-      }
-    });
-  });
-});
 
 
 /** Вихід */

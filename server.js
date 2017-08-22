@@ -26,11 +26,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(session);
 
 
+/** Авторизація */
 app.route('/login')
   .get(login)
   .post(login);
 
 
+/** Реєстрація */
 app.route('/register')
   .get(register)
   .post(register);

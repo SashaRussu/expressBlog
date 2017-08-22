@@ -1,9 +1,8 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const hash = require('pbkdf2-password')();
 const path = require('path');
-const session = require('express-session');
 
+const session = require('./route/session');
 const login = require('./route/login');
 const register = require('./route/register');
 const main = require('./route/main');
@@ -24,23 +23,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 /** Сесії */
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(session({
-  resave: false, // don't save session if unmodified
-  saveUninitialized: false, // don't create session until something stored
-  secret: 'secret text for salt'
-}));
-
-app.use(function(req, res, next){
-  let err = req.session.error;
-  let msg = req.session.success;
-  delete req.session.error;
-  delete req.session.success;
-  res.locals.message = '';
-  if (err) res.locals.message = '<p class="msg error">' + err + '</p>';
-  if (msg) res.locals.message = '<p class="msg success">' + msg + '</p>';
-  next();
-});
+app.use(session);
 
 
 app.route('/login')

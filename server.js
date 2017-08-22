@@ -31,11 +31,7 @@ app.route('/login')
   .get(login)
   .post(login);
 
-
-/** Реєстрація */
-app.route('/register')
-  .get(register)
-  .post(register);
+app.use('/register', register);
 
 
 app.get('/', main);

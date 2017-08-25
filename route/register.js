@@ -1,13 +1,28 @@
-const express = require('express');
-const newUser = require('./../bll/newUser');
+const express = require('express')
+const register = require('./../bll/user').register
 
-const router = express.Router();
+const router = express.Router()
 
 
-router.get('/', function(req, res) {
-  res.render('register');
-});
+router.get('/', (req, res) => res.render('register'))
 
-router.post('/', newUser);
+router.post('/', (req, res) => {
+  const { name, password: pass } = req.body
 
-module.exports = router;
+  register(name, pass)
+    .then(user => {
+      req.session.user = user
+
+      req.session.success = 'Hello ' + user.name
+
+      res.redirect('/')
+    })
+    .catch(err => {
+      req.session.error = err.message
+
+      res.redirect('/register')
+    })
+})
+
+
+module.exports = router

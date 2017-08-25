@@ -1,28 +1,28 @@
-const express = require('express');
-const auth = require('./../bll/auth');
+const express = require('express')
+const login = require('../bll/user').login
 
-const router = express.Router();
-
-
-router.get('/login', function(req, res) {
-  res.render('login');
-});
-
-router.post('/login', function(req, res) {
-  auth(req.body.username, req.body.password, function(err, user){
-    if (user) {
-      req.session.user = user;
-
-      req.session.success = 'Hello ' + user.name;
-
-      res.redirect('/');
-    } else {
-      req.session.error = err.message;
-
-      res.redirect('/login');
-    }
-  });
-});
+const router = express.Router()
 
 
-module.exports = router;
+router.get('/', (req, res) => res.render('login'))
+
+router.post('/', (req, res) => {
+  const { name, password: pass } = req.body
+
+  login(name, pass)
+    .then(user => {
+      req.session.user = user
+
+      req.session.success = 'Hello ' + user.name
+
+      res.redirect('/')
+    })
+    .catch(err => {
+      req.session.error = err.message
+
+      res.redirect('/login')
+    })
+})
+
+
+module.exports = router

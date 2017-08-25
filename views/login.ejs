@@ -1,22 +1,23 @@
-<% var title = 'Authentication page' %>
+<% var title = 'Login' %>
+
+<% var urlInfo = 'If you can`t login try <a href="/register">registration</a>' %>
+
 <% include head %>
 
-<h1><a href="/">Main</a></h1>
-<h2>Login</h2>
-<%- message %>
-If you don`t login try <a href="/register">registration</a>
+
 <form method="post" action="/login">
-    <p>
-        <label>Username:</label>
-        <input type="text" name="username">
-    </p>
-    <p>
-        <label>Password:</label>
-        <input type="password" name="password">
-    </p>
-    <p>
-        <input type="submit" value="Login">
-    </p>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="name" class="col-form-label">User name</label>
+            <input required autofocus type="text" class="form-control" id="name" name="name" placeholder="Enter user name">
+        </div>
+        <div class="form-group col-md-6">
+            <label for="password" class="col-form-label">Password</label>
+            <input required type="password" class="form-control" id="password" name="password" placeholder="Password">
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Login</button>
 </form>
+
 
 <% include foot %>

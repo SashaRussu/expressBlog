@@ -1,7 +1,7 @@
-const mongoose = require('./db');
+const mongoose = require('./db')
 
 let messagesSchema = mongoose.Schema({
-  categoryid: String,
+  categoryId: String,
   text: {
     type: String,
     required: true
@@ -10,6 +10,6 @@ let messagesSchema = mongoose.Schema({
     type: Date,
     expires: 60*60*24
   }
-});
+})
 
-module.exports = mongoose.model('Messages', messagesSchema);
+module.exports = mongoose.model('Messages', messagesSchema)

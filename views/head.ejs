@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title><%= title %></title>
+    <title><%= title %> page</title>
 
     <script src="tinymce/tinymce.min.js"></script>
     <script>tinymce.init({ selector:'textarea' });</script>
 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
     <style>
         body {
             padding: 50px;
@@ -17,16 +18,14 @@
         .success {
             color: green;
         }
-        .message {
-            padding: 10px;
-            border: 1px solid black;
-        }
-
-        .block {
-            position: relative;
-            float: left;
-            width: 50%;
-        }
     </style>
 </head>
 <body>
+<div class="container">
+    <h1>This is <%= title.toLowerCase() %> page</h1>
+
+    <%- urlInfo %>
+
+    <i><%- message %></i>
+
+    <hr>

@@ -1,26 +1,26 @@
-const express = require('express');
-const getCategories = require('./../bll/getCategories');
-const delCategory = require('./../bll/delCategory')
+const express = require('express')
+const delCategory = require('./../dal/category').del
+const delMessages = require('./../dal/message').delByCategoryId
 
-const router = express.Router();
-
-
-router.route('/delCategory')
-  .get(function(req, res) {
-    if (req.session.user) {
-      res.locals.viewType = 'delCategory';
-
-      res.locals.categoryId = req.session.categoryId;
-
-      getCategories(req, res);
-    } else {
-      req.session.error = 'Access denied!';
-      res.redirect('/login');
-    }
-  })
-  .post(function(req, res) {
-    delCategory(req, res);
-  });
+const router = express.Router()
 
 
-module.exports = router;
+router.post('/', function(req, res) {
+  const [categoryId, categoryName] = req.body.category.split('$')
+
+  delCategory(categoryId)
+    .then(() => delMessages(categoryId))
+    .then(() => {
+      req.session.success = 'Deleted category ' + categoryName;
+
+      res.redirect('/manageCategory')
+    })
+    .catch(err => {
+      req.session.error = 'Please, try again'
+
+      res.redirect('/manageCategory?category=' + categoryId + '$' + categoryName)
+    })
+})
+
+
+module.exports = router

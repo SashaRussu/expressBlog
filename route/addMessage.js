@@ -1,6 +1,6 @@
 const express = require('express')
-const getCategories = require('./../dal/category').get
-const add = require('./../dal/message').add
+const getCategories = require('../DAL/category').get
+const add = require('../DAL/message').add
 
 const router = express.Router()
 
@@ -24,7 +24,7 @@ router.get('/', (req, res) => {
       if (!categories.length) {
         req.session.error = 'Don`t categories for select'
 
-        res.redirect('/manageCategory')
+        res.redirect('/category')
 
         return false
       }

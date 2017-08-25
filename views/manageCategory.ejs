@@ -2,10 +2,9 @@
 
 <% var urlInfo = 'You can <a href="/logout">logout</a>' %>
 
-<% include head %>
+<% include header %>
 
-
-<a href="?category=<%= categoryId + '$' + categoryName %>">main page/</a>
+<a href="/?category=<%= categoryId + '$' + categoryName %>">main page/</a>
 
 <div class="row">
   <div class="col-md-6">
@@ -37,7 +36,7 @@
 
       <br>
 
-      <form class="form-inline" method="post" action="category/edit">
+      <form class="form-inline" method="post" action="category">
 
         <div class="form-group mr-sm-2">
           <input id="editName" required type="text" class="form-control" name="name" value="<%= categoryName %>">
@@ -73,3 +72,5 @@
 
   </div>
 </div>
+
+<% include footer %>

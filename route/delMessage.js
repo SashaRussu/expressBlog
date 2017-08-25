@@ -1,8 +1,7 @@
 const express = require('express')
-const del = require('./../dal/message').delById
+const deleteMessage = require('../DAL/message').deleteById
 
 const router = express.Router()
-
 
 router.get('/', (req, res) => {
   if (!req.session.user) {
@@ -18,7 +17,7 @@ router.get('/', (req, res) => {
     [categoryId, categoryName] = req.query.category.split('$')
   }
 
-  del(req.query.messageId)
+  deleteMessage(req.query.messageId)
     .then(data => {
       req.session.success = 'Deleted message';
 
@@ -30,6 +29,5 @@ router.get('/', (req, res) => {
       res.redirect('/?category=' + categoryId + '$' + categoryName)
     })
 })
-
 
 module.exports = router

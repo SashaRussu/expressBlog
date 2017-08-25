@@ -2,14 +2,13 @@
 
 <% var urlInfo = 'You can <a href="/logout">logout</a>' %>
 
-<% include head %>
-
+<% include header %>
 
 <a href="/?category=<%= categoryId + '$' + categoryName %>">main page/</a>
 
 <h2 class="text-center">Message</h2>
 
-<form method="post" action="/editMessage">
+<form method="post" action="/message">
 
   <input type="hidden" name="category" value="<%= categoryId + '$' + categoryName %>">
 
@@ -22,3 +21,5 @@
   </p>
 
 </form>
+
+<% include footer %>

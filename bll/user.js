@@ -1,6 +1,6 @@
 const hash = require('pbkdf2-password')();
-const exist = require('./../dal/user').exist
-const add = require('./../dal/user').add
+const exist = require('../DAL/user').exist
+const add = require('../DAL/user').add
 
 
 const hashPassword = (pass, user = null) => {

@@ -1,6 +1,5 @@
 const Messages = require('./../db/messages');
 
-
 const get = categoryId => {
   return Messages.find({ categoryId }).sort({data: -1})
 }
@@ -31,15 +30,15 @@ const edit = (id, message) => {
 exports.edit = edit
 
 
-const delById = id => {
+const deleteById = id => {
   return Messages.remove({ _id: id })
 }
 
-exports.delById = delById
+exports.deleteById = deleteById
 
 
-const delByCategoryId = categoryId => {
+const deleteByCategoryId = categoryId => {
   return Messages.remove({ categoryId: categoryId })
 }
 
-exports.delByCategoryId = delByCategoryId
+exports.deleteByCategoryId = deleteByCategoryId

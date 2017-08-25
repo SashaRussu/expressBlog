@@ -1,9 +1,6 @@
 const Categories = require('./../db/categories');
 
-
-const get = () => {
-  return Categories.find()
-}
+const get = () => Categories.find()
 
 exports.get = get
 
@@ -17,15 +14,11 @@ const add = name => {
 exports.add = add
 
 
-const edit = (id, name) => {
-  return Categories.update({ _id: id }, { $set: { name: name } })
-}
+const edit = (id, name) => Categories.update({ _id: id }, { $set: { name: name } })
 
 exports.edit = edit
 
 
-const del = id => {
-  return Categories.remove({ _id: id })
-}
+const deleteCategory = id => Categories.remove({ _id: id })
 
-exports.del = del
+exports.deleteCategory = deleteCategory

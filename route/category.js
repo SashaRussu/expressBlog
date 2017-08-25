@@ -1,10 +1,11 @@
 const express = require('express')
-const categoryDAL = require('./../dal/category')
-const delMessages = require('./../dal/message').delByCategoryId
+const categoryDAL = require('../DAL/category')
+const deleteMessages = require('../DAL/message').deleteByCategoryId
 
-const { add, edit, del: deleteCategory, get: getCategories  } = categoryDAL
+const { add: addCategory, edit: editCategory, deleteCategory, get: getCategories } = categoryDAL
 
 const router = express.Router()
+
 router.get('/', (req, res) => {
   if (!req.session.user) {
     req.session.error = 'Access denied!'
@@ -21,10 +22,13 @@ router.get('/', (req, res) => {
 
   getCategories()
     .then(categories => {
+      const manageCategory = () =>
+          res.render('manageCategory', { categories: categories, categoryId: categoryId, categoryName: categoryName })
+
       if (!categories.length) {
         req.session.error = 'Don`t categories for select'
 
-        res.render('manageCategory', { categories: categories, categoryId: categoryId, categoryName: categoryName })
+        manageCategory()
 
         return false
       }
@@ -34,51 +38,54 @@ router.get('/', (req, res) => {
         categoryName = categories[0].name
       }
 
-      res.render('manageCategory', { categories: categories, categoryId: categoryId, categoryName: categoryName })
+      manageCategory()
     })
     .catch()
 })
+
 router.post('/', function(req, res) {
   const categoryId = req.body.category.split('$')[0]
   const categoryName = req.body.name
 
-  edit(categoryId, categoryName)
+  editCategory(categoryId, categoryName)
     .then(() => {
       req.session.success = 'Edited category ' + categoryName;
 
-      res.redirect('/manageCategory?category=' + categoryId + '$' + categoryName)
+      res.redirect('/category?category=' + categoryId + '$' + categoryName)
     })
     .catch(err => {
       req.session.error = 'Please, try again'
 
-      res.redirect('/manageCategory?category=' + categoryId + '$' + categoryName)
+      res.redirect('/category?category=' + categoryId + '$' + categoryName)
     })
 })
+
 router.post('/add', function (req, res) {
   const { name } = req.body
 
-  add(name)
+  addCategory(name)
     .then(category => {
       req.session.success = 'Added category ' + category.name
 
-      res.redirect('http://localhost:3000/category?category=' + category._id + '$' + category.name)
+      res.redirect('/category?category=' + category._id + '$' + category.name)
     })
     .catch()
 })
+
 router.post('/delete', function(req, res) {
   const [categoryId, categoryName] = req.body.category.split('$')
 
   deleteCategory(categoryId)
-    .then(() => delMessages(categoryId))
+    .then(() => deleteMessages(categoryId))
     .then(() => {
       req.session.success = 'Deleted category ' + categoryName;
 
-      res.redirect('/')
+      res.redirect('/category')
     })
     .catch(err => {
       req.session.error = 'Please, try again'
 
-      res.redirect('?category=' + categoryId + '$' + categoryName)
+      res.redirect('/category?category=' + categoryId + '$' + categoryName)
     })
 })
 

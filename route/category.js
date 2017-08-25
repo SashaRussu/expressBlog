@@ -51,12 +51,12 @@ router.post('/', function(req, res) {
     .then(() => {
       req.session.success = 'Edited category ' + categoryName;
 
-      res.redirect('/category?category=' + categoryId + '$' + categoryName)
+      res.redirect('?category=' + categoryId + '$' + categoryName)
     })
     .catch(err => {
       req.session.error = 'Please, try again'
 
-      res.redirect('/category?category=' + categoryId + '$' + categoryName)
+      res.redirect('?category=' + categoryId + '$' + categoryName)
     })
 })
 

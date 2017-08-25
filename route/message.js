@@ -42,7 +42,7 @@ router.post('/', (req, res) => {
     .catch(err => {
       req.session.error = 'Please, write message and try again'
 
-      res.redirect('/message?category=' + categoryId + '$' + categoryName + '&messageId=' + req.body.messageId)
+      res.redirect('?category=' + categoryId + '$' + categoryName + '&messageId=' + req.body.messageId)
     })
 })
 

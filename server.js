@@ -1,23 +1,18 @@
-const express = require('express');
-const path = require('path');
+const express = require('express')
+const path = require('path')
 
-const session = require('./route/session');
-const route = require('./route/route');
+const session = require('./route/session')
+const route = require('./route/route')
 
+const app = express()
 
-const app = express();
-
-
-/** Шаблон */
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
-
-app.use(express.static(path.join(__dirname, 'public')));
+app.set('view engine', 'ejs')
+app.set('views', path.join(__dirname, 'views'))
+app.use(express.static(path.join(__dirname, 'public')))
 
 
-app.use(session);
-
-app.use(route);
+app.use(session)
+app.use(route)
 
 
 if (!module.parent) {

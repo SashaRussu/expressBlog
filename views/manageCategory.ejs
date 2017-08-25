@@ -5,7 +5,7 @@
 <% include head %>
 
 
-<a href="/?category=<%= categoryId + '$' + categoryName %>">main page/</a>
+<a href="?category=<%= categoryId + '$' + categoryName %>">main page/</a>
 
 <div class="row">
   <div class="col-md-6">
@@ -15,7 +15,7 @@
     <div class="card mb-3" style="padding: 10px;"><div class="card-block">
       <label for="category" class="col-form-label">Category name</label>
 
-      <form class="form-inline" method="post" action="/delCategory">
+      <form class="form-inline" method="post" action="category/delete">
 
         <div class="form-group mr-sm-2">
           <select id="category" class="form-control" name="category"
@@ -37,7 +37,7 @@
 
       <br>
 
-      <form class="form-inline" method="post" action="/editCategory">
+      <form class="form-inline" method="post" action="category/edit">
 
         <div class="form-group mr-sm-2">
           <input id="editName" required type="text" class="form-control" name="name" value="<%= categoryName %>">
@@ -60,7 +60,7 @@
     <div class="card mb-3" style="padding: 10px;"><div class="card-block">
       <label for="newName" class="col-form-label">Category name</label>
 
-      <form class="form-inline" method="post" action="/addCategory">
+      <form class="form-inline" method="post" action="category/add">
 
         <div class="form-group mr-sm-2">
           <input id="addName" required type="text" class="form-control" name="name">

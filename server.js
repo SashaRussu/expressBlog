@@ -22,7 +22,7 @@ const compiler = webpack(webpackConfig)
 // //app.use(route)
 
 app.use(webpackDevMiddleware(compiler, {
-  noInfo: true, publicPath: webpackConfig.output.publicPath, quiet: true
+  noInfo: false, publicPath: webpackConfig.output.publicPath, quiet: true
 }))
 
 app.use(webpackHotMiddleware(compiler))

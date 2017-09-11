@@ -10,6 +10,7 @@ const config = {
     vendor: [
       'react',
       'react-dom',
+      'redux'
     ],
   },
 

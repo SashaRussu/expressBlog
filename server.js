@@ -1,8 +1,8 @@
 const express = require('express')
 const path = require('path')
 
-const session = require('./route/session')
-const route = require('./route/route')
+// const session = require('./route/session')
+// const route = require('./route/route')
 
 const app = express()
 
@@ -16,7 +16,7 @@ const compiler = webpack(webpackConfig)
 
 // app.set('view engine', 'ejs')
 // app.set('views', path.join(__dirname, 'views'))
-// app.use(express.static(path.join(__dirname, 'public')))
+// app.use(express.static(path.join(__dirname, 'vendor')))
 //
 // //app.use(session)
 // //app.use(route)

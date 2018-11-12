@@ -1,0 +1,33 @@
+<% var title = 'Write message' %>
+
+<% var urlInfo = 'You can <a href="/logout">logout</a>' %>
+
+<% include header %>
+
+<a href="/?category=<%= categoryId + '$' + categoryName %>">main page/</a>
+
+<h2 class="text-center">Message</h2>
+
+<form method="post" action="/addMessage">
+
+  <label>
+    <select class="form-control" name="category">
+      <% categories.forEach(function(category){ %>
+        <% if (categoryId == category._id) { %>
+          <option selected value="<%= category._id + '$' + category.name %>"><%= category.name %></option>
+        <% } else {%>
+          <option value="<%= category._id + '$' + category.name %>"><%= category.name %></option>
+        <% } %>
+      <% }); %>
+    </select>
+  </label>
+
+  <button type="submit" class="btn btn-success" style="float: right;">add</button>
+
+  <p>
+    <textarea name="message" style="height: 300px;"></textarea>
+  </p>
+
+</form>
+
+<% include footer %>

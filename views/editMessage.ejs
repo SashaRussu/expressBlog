@@ -1,0 +1,25 @@
+<% var title = 'Edit message' %>
+
+<% var urlInfo = 'You can <a href="/logout">logout</a>' %>
+
+<% include header %>
+
+<a href="/?category=<%= categoryId + '$' + categoryName %>">main page/</a>
+
+<h2 class="text-center">Message</h2>
+
+<form method="post" action="/message">
+
+  <input type="hidden" name="category" value="<%= categoryId + '$' + categoryName %>">
+
+  <button type="submit" class="btn btn-success" style="float: right;">edit</button><br><br><br>
+
+  <input type="hidden" name="messageId" value="<%= messageEdit._id %>">
+
+  <p>
+    <textarea name="message" style="height: 300px;"><%- messageEdit.text %></textarea>
+  </p>
+
+</form>
+
+<% include footer %>

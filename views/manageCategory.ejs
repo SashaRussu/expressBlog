@@ -1,0 +1,76 @@
+<% var title = 'Manage category' %>
+
+<% var urlInfo = 'You can <a href="/logout">logout</a>' %>
+
+<% include header %>
+
+<a href="/?category=<%= categoryId + '$' + categoryName %>">main page/</a>
+
+<div class="row">
+  <div class="col-md-6">
+
+    <h3 class="text-center">Del/edit category</h3>
+
+    <div class="card mb-3" style="padding: 10px;"><div class="card-block">
+      <label for="category" class="col-form-label">Category name</label>
+
+      <form class="form-inline" method="post" action="category/delete">
+
+        <div class="form-group mr-sm-2">
+          <select id="category" class="form-control" name="category"
+              onchange="document.getElementById('editName').value = this.value.split('$')[1];
+              document.getElementById('editCategory').value = this.value">
+            <% categories.forEach(function(category){ %>
+              <% if (categoryId == category._id) { %>
+                <option selected value="<%= category._id + '$' + category.name %>"><%= category.name %></option>
+              <% } else {%>
+                <option value="<%= category._id + '$' + category.name %>"><%= category.name %></option>
+              <% } %>
+            <% }); %>
+          </select>
+        </div>
+
+        <button type="submit" class="btn btn-success">del</button>
+
+      </form>
+
+      <br>
+
+      <form class="form-inline" method="post" action="category">
+
+        <div class="form-group mr-sm-2">
+          <input id="editName" required type="text" class="form-control" name="name" value="<%= categoryName %>">
+        </div>
+
+        <input type="hidden" id="editCategory" name="category"
+            value="<%= categoryId + '$' + categoryName %>">
+
+        <button type="submit" class="btn btn-success">edit</button>
+
+      </form>
+    </div></div>
+
+  </div>
+
+  <div class="col-md-6">
+
+    <h3 class="text-center">Add category</h3>
+
+    <div class="card mb-3" style="padding: 10px;"><div class="card-block">
+      <label for="newName" class="col-form-label">Category name</label>
+
+      <form class="form-inline" method="post" action="category/add">
+
+        <div class="form-group mr-sm-2">
+          <input id="addName" required type="text" class="form-control" name="name">
+        </div>
+
+        <button type="submit" class="btn btn-success">add</button>
+
+      </form>
+    </div></div>
+
+  </div>
+</div>
+
+<% include footer %>

@@ -1,0 +1,54 @@
+<% var title = 'Main' %>
+
+<% var urlInfo = 'You can <a href="/logout">logout</a>' %>
+
+<% include header %>
+
+<div class="row">
+  <div class="col-md-2">
+    <br><br>
+    <a href="/category?category=<%= categoryId + '$' + categoryName %>">
+      <button type="button" class="btn btn-secondary">Manage category</button>
+    </a>
+  </div>
+
+  <div class="col-md-10">
+    <h2 class="text-center">Messages</h2>
+
+    <form id="categories" method="get" action="/">
+
+      <label>
+        <select class="form-control" name="category" onchange="document.getElementById('categories').submit()">
+          <option disabled selected><%= categoryName %></option>
+
+          <% categories.forEach(function(category){ %>
+            <option value="<%= category._id + '$' + category.name %>">
+              <%= category.name %>
+            </option>
+          <% }); %>
+        </select>
+      </label>
+
+      <a href="/addMessage?category=<%= categoryId + '$' + categoryName %>" style="float: right;">
+        <button type="button" class="btn btn-success">write message</button>
+      </a>
+
+    </form>
+
+    <% messages.forEach(function(message) { %>
+      <div class="card mb-3" style="padding: 10px;"><div class="card-block">
+        <p class="card-text"><%- message.text %></p>
+        <div style="float: right;">
+          <a href="/message?category=<%= categoryId + '$' + categoryName %>&messageId=<%= message._id %>">
+            <button type="button" class="btn btn-outline-primary btn-sm">edit</button>
+          </a>
+          <a href="/message/delete?category=<%= categoryId + '$' + categoryName %>&messageId=<%= message._id %>">
+            <button type="button" class="btn btn-outline-primary btn-sm">delete</button>
+          </a>
+        </div>
+      </div></div>
+    <% }); %>
+  </div>
+</div>
+
+<% include footer %>
